@@ -1,48 +1,44 @@
 import { useState } from "react";
+import Filter from "./Filter";
+import PhoneInput from "./PhoneInput";
+import PhoneNumbers from "./PhoneNumbers";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
-  const [newName, setNewName] = useState("");
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "012-233-2345" },
+    { name: "Eggman", number: "123-232-0494" },
+    { name: "Dr Mario", number: "123-222-5965" },
+  ]);
+  const [filteredList, setFilteredList] = useState([]);
 
-  const addName = (event) => {
-    event.preventDefault();
-    // const names = persons.filter((person) => person.name.includes(newName));
-    let nameCheck = false;
-    persons.forEach((element) => {
-      if (element.name === newName) {
-        nameCheck = true;
-      }
-    });
-    if (nameCheck) {
-      alert(`${newName} Is Already In The PhoneBook!`);
-      setNewName("");
-    } else {
-      setPersons(persons.concat({ name: newName }));
-      setNewName("");
-    }
+  const [checkName, setCheckName] = useState("");
+
+  const filterList = (e) => {
+    setFilteredList(
+      persons.filter((person) => {
+        let lowerName = person.name.toLowerCase();
+        if (lowerName.includes(e.toLowerCase())) {
+          return person;
+        }
+      })
+    );
   };
-
   return (
     <div>
-      <h2>Phonebook</h2>
-      <form onSubmit={addName}>
-        <div>
-          name:{" "}
-          <input
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {persons.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
+      <h2>Your Phonebook!</h2>
+      <Filter
+        value={checkName}
+        onChange={(event) => {
+          setCheckName(event.target.value);
+          filterList(event.target.value);
+        }}
+      />
+      <PhoneInput persons={persons} setPersons={setPersons} />
+      <PhoneNumbers
+        filteredList={filteredList}
+        persons={persons}
+        checkName={checkName}
+      />
     </div>
   );
 };
