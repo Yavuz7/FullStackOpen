@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+// import { axios } from "axios";
 import Filter from "./Filter";
 import PhoneInput from "./PhoneInput";
 import PhoneNumbers from "./PhoneNumbers";
+import axios from "axios";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "012-233-2345" },
-    { name: "Eggman", number: "123-232-0494" },
-    { name: "Dr Mario", number: "123-222-5965" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
-
   const [checkName, setCheckName] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const filterList = (e) => {
     setFilteredList(
