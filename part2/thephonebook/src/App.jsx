@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Filter from "./Filter";
 import PhoneInput from "./PhoneInput";
 import PhoneNumbers from "./PhoneNumbers";
+import PhoneServices from "./PhoneServices";
 import axios from "axios";
 
 const App = () => {
@@ -11,8 +12,8 @@ const App = () => {
   const [checkName, setCheckName] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    PhoneServices.getAll().then((initalData) => {
+      setPersons(initalData);
     });
   }, []);
 
@@ -38,6 +39,7 @@ const App = () => {
       />
       <PhoneInput persons={persons} setPersons={setPersons} />
       <PhoneNumbers
+        setPersons={setPersons}
         filteredList={filteredList}
         persons={persons}
         checkName={checkName}

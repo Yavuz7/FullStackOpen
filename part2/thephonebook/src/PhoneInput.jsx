@@ -1,4 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
+import PhoneServices from "./PhoneServices";
 
 const PhoneInput = ({ persons, setPersons }) => {
   const [newNumber, setNewNumber] = useState("");
@@ -14,11 +16,37 @@ const PhoneInput = ({ persons, setPersons }) => {
       }
     });
     if (nameCheck) {
-      alert(`${newName} Is Already In The PhoneBook!`);
-      setNewName("");
-      setNewNumber("");
+      if (
+        window.confirm(
+          `${newName} Is Already In The PhoneBook! Replace the old number with a new one?`
+        )
+      ) {
+        const replacingId = persons.find(
+          (person) => person.name === newName
+        ).id;
+        const newData = { name: newName, number: newNumber };
+        PhoneServices.change(replacingId, newData).then((newContact) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== replacingId ? person : newContact
+            )
+          );
+        });
+        setNewName("");
+        setNewNumber("");
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
     } else {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+      const newContact = {
+        name: newName,
+        number: newNumber,
+      };
+      PhoneServices.create(newContact).then((newContact) => {
+        console.log(newContact);
+        setPersons(persons.concat(newContact));
+      });
       setNewName("");
       setNewNumber("");
     }
