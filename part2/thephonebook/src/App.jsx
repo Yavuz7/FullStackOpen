@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-// import { axios } from "axios";
 import Filter from "./Filter";
 import PhoneInput from "./PhoneInput";
 import PhoneNumbers from "./PhoneNumbers";
 import PhoneServices from "./PhoneServices";
-import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
