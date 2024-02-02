@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import countryServices from "./countryServices";
 import CountryData from "./CountryData";
@@ -8,6 +7,8 @@ function App() {
   const [arrayOfNames, setArrayOfNames] = useState(null);
   const [arrayOfFilteredNames, setArrayOfFilteredNames] = useState([]);
   const [dataOfSingleCountry, setDataOfSingleCountry] = useState([]);
+
+  console.log(import.meta.env.VITE_API_KEY_WEATHER);
 
   //Set Loading Screen Trick From : https://www.shecodes.io/athena/11556-react-how-to-show-a-loading-message-when-fetching-data
   const [loading, setLoading] = useState("");
