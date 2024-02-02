@@ -61,6 +61,16 @@ function App() {
     }, 1000);
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
+
+  function showCountry(country) {
+    setArrayOfFilteredNames([country]);
+    setSearchQuery(country);
+    setLoading("Grabbing Country Data");
+    countryServices.getCountryDataFromName(country).then((response) => {
+      setDataOfSingleCountry(response);
+      setLoading("Done");
+    });
+  }
   return (
     <>
       <h2>Find Countries</h2>
@@ -77,7 +87,14 @@ function App() {
           <CountryData Data={dataOfSingleCountry} />
         ) : (
           arrayOfFilteredNames.map((country) => (
-            <li key={country}>{country}</li>
+            <>
+              <li key={country}>
+                {country} {""}
+                <button key={country + 1} onClick={() => showCountry(country)}>
+                  Show
+                </button>
+              </li>
+            </>
           ))
         )}
       </ul>
