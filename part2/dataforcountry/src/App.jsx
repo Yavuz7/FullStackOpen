@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import countryServices from "./countryServices";
+import CountryData from "./CountryData";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [arrayOfNames, setArrayOfNames] = useState(null);
   const [arrayOfFilteredNames, setArrayOfFilteredNames] = useState([]);
+  const [dataOfSingleCountry, setDataOfSingleCountry] = useState([]);
 
   //Set Loading Screen Trick From : https://www.shecodes.io/athena/11556-react-how-to-show-a-loading-message-when-fetching-data
   const [loading, setLoading] = useState("");
@@ -38,15 +40,21 @@ function App() {
           return name;
         }
       });
-      console.log(filteredArray);
       if (filteredArray.length === 1) {
         setArrayOfFilteredNames(filteredArray);
         setLoading("Grabbing Country Data");
-        countryServices.getCountryDataFromName(filteredArray[0]);
+        countryServices
+          .getCountryDataFromName(filteredArray[0])
+          .then((response) => {
+            setDataOfSingleCountry(response);
+            setLoading("Done");
+          });
       } else if (filteredArray.length <= 10) {
+        setDataOfSingleCountry([]);
         setArrayOfFilteredNames(filteredArray);
         setLoading("Done");
       } else {
+        setDataOfSingleCountry([]);
         setArrayOfFilteredNames([]);
         setLoading("Query is too broad,specify another filter");
       }
@@ -65,9 +73,13 @@ function App() {
 
       {loading ? <p>{loading}</p> : null}
       <ul>
-        {arrayOfFilteredNames.map((country) => (
-          <li key={country}>{country}</li>
-        ))}
+        {arrayOfFilteredNames.length === 1 ? (
+          <CountryData Data={dataOfSingleCountry} />
+        ) : (
+          arrayOfFilteredNames.map((country) => (
+            <li key={country}>{country}</li>
+          ))
+        )}
       </ul>
     </>
   );
