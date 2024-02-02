@@ -5,7 +5,7 @@ const CountryData = ({ Data }) => {
   const languages = [];
   if (Data.languages) {
     Object.values(Data.languages).forEach((language) => {
-      languages.push(<li id={language}>{language}</li>);
+      languages.push(<li key={language}>{language}</li>);
     });
   }
   return (

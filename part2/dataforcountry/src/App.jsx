@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import countryServices from "./countryServices";
 import CountryData from "./CountryData";
+import WeatherData from "./WeatherData";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [arrayOfNames, setArrayOfNames] = useState(null);
   const [arrayOfFilteredNames, setArrayOfFilteredNames] = useState([]);
   const [dataOfSingleCountry, setDataOfSingleCountry] = useState([]);
-
-  console.log(import.meta.env.VITE_API_KEY_WEATHER);
+  const [weatherOfSingleCountry, setWeatherOfSingleCountry] = useState([]);
 
   //Set Loading Screen Trick From : https://www.shecodes.io/athena/11556-react-how-to-show-a-loading-message-when-fetching-data
   const [loading, setLoading] = useState("");
@@ -49,6 +49,12 @@ function App() {
           .then((response) => {
             setDataOfSingleCountry(response);
             setLoading("Done");
+            return response;
+          })
+          .then((response) => {
+            return countryServices
+              .getCountryWeather(response.capital)
+              .then((response) => setWeatherOfSingleCountry(response.data));
           });
       } else if (filteredArray.length <= 10) {
         setDataOfSingleCountry([]);
@@ -78,22 +84,23 @@ function App() {
       <p>Note This Website uses debounce to avoid excessive calls</p>
       <input
         value={searchQuery}
-        id="searchQuery"
+        key="searchQuery"
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
       {loading ? <p>{loading}</p> : null}
       <ul>
         {arrayOfFilteredNames.length === 1 ? (
-          <CountryData Data={dataOfSingleCountry} />
+          <>
+            <CountryData Data={dataOfSingleCountry} />
+            <WeatherData Data={weatherOfSingleCountry} />
+          </>
         ) : (
           arrayOfFilteredNames.map((country) => (
             <>
               <li key={country}>
                 {country} {""}
-                <button key={country + 1} onClick={() => showCountry(country)}>
-                  Show
-                </button>
+                <button onClick={() => showCountry(country)}>Show</button>
               </li>
             </>
           ))
