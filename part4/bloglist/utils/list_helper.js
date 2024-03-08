@@ -22,7 +22,9 @@ const mostBlogs = (blogs) => {
   let highest = { author: "none", blogs: 0 };
   const authors = [];
   blogs.map((blog) => {
-    const currentAuthor = authors.find((author) => author.name === blog.author);
+    const currentAuthor = authors.find(
+      (author) => author.author === blog.author
+    );
     if (currentAuthor) {
       currentAuthor.blogs += 1;
       if (currentAuthor.blogs > highest.blogs) {
@@ -35,7 +37,7 @@ const mostBlogs = (blogs) => {
       }
     }
   });
-  return blogs.length == 1 ? { author: blogs[0].author, blogs: 1 } : authors;
+  return blogs.length == 1 ? { author: blogs[0].author, blogs: 1 } : highest;
 };
 
 module.exports = {
