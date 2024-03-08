@@ -7,7 +7,7 @@ import "./index.css";
 const PhoneInput = ({ persons, setPersons }) => {
   const [newNumber, setNewNumber] = useState("");
   const [newName, setNewName] = useState("");
-  const [notification, setNotification] = useState(null);
+  const [notification, setNotification] = useState([null, null]);
 
   const addName = (event) => {
     event.preventDefault();
@@ -34,17 +34,18 @@ const PhoneInput = ({ persons, setPersons }) => {
                 person.id !== replacingId ? person : newContact
               )
             );
-            setNotification(`${newData.name}'s phonenumber has been changed!`);
+            setNotification([
+              `${newData.name}'s phonenumber has been changed!`,
+              false,
+            ]);
             setTimeout(() => {
-              setNotification(null);
+              setNotification([null, null]);
             }, 5000);
           })
           .catch((error) => {
-            setNotification(
-              `${newData.name} has already been removed from the server!`
-            );
+            setNotification([error.response.data.error, true]);
             setTimeout(() => {
-              setNotification(null);
+              setNotification([null, null]);
             }, 5000);
           });
 
@@ -59,14 +60,22 @@ const PhoneInput = ({ persons, setPersons }) => {
         name: newName,
         number: newNumber,
       };
-      setNotification(`${newContact.name} has been added!`);
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-      PhoneServices.create(newContact).then((newContact) => {
-        console.log(newContact);
-        setPersons(persons.concat(newContact));
-      });
+
+      PhoneServices.create(newContact)
+        .then((newContact) => {
+          console.log(newContact);
+          setPersons(persons.concat(newContact));
+          setNotification([`${newContact.name} has been added!`, false]);
+          setTimeout(() => {
+            setNotification([null, null]);
+          }, 5000);
+        })
+        .catch((error) => {
+          setNotification([error.response.data.error, true]);
+          setTimeout(() => {
+            setNotification([null, null]);
+          }, 5000);
+        });
 
       setNewName("");
       setNewNumber("");
@@ -75,7 +84,7 @@ const PhoneInput = ({ persons, setPersons }) => {
 
   return (
     <>
-      <Notification message={notification} />
+      <Notification message={notification[0]} isError={notification[1]} />
 
       <form onSubmit={addName}>
         <h2>Add A New Number!</h2>
