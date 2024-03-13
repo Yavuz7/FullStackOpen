@@ -40,9 +40,34 @@ const mostBlogs = (blogs) => {
   return blogs.length == 1 ? { author: blogs[0].author, blogs: 1 } : highest;
 };
 
+const mostLikes = (blogs) => {
+  let highest = { author: "none", likes: 0 };
+  const authors = [];
+  blogs.map((blog) => {
+    const currentAuthor = authors.find(
+      (author) => author.author === blog.author
+    );
+    if (currentAuthor) {
+      currentAuthor.likes += blog.likes;
+      if (currentAuthor.likes > highest.likes) {
+        highest = currentAuthor;
+      }
+    } else {
+      authors.push({ author: blog.author, likes: blog.likes });
+      if (highest.likes == 0) {
+        highest = { author: blog.author, likes: blog.likes };
+      }
+    }
+  });
+  return blogs.length == 1
+    ? { author: blogs[0].author, likes: blogs[0].likes }
+    : highest;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
