@@ -43,6 +43,13 @@ test("Get blog Format", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
+test("Get id property", async () => {
+  const response = await api.get("/api/blogs");
+
+  assert(response.body[0].hasOwnProperty("id"));
+  assert(!response.body[0].hasOwnProperty("_id"));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
