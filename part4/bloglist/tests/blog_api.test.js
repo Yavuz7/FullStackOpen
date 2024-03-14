@@ -50,6 +50,25 @@ test("Get id property", async () => {
   assert(!response.body[0].hasOwnProperty("_id"));
 });
 
+const newBlogPost = {
+  title: "Sombreos on Sunday?",
+  author: "Sunglasses",
+  url: "google.com",
+  likes: 40,
+};
+
+test("Posting blog to Database", async () => {
+  await api.post("/api/blogs").send(newBlogPost);
+
+  const response = await api.get("/api/blogs");
+
+  const contents = response.body.map((e) => e.title);
+  console.log(contents);
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1);
+  assert(contents.includes("Sombreos on Sunday?"));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
