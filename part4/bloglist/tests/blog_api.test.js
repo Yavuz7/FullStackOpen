@@ -72,8 +72,16 @@ test("Check if likes defaulted", async () => {
   const response = await api.get("/api/blogs");
 
   const likes = response.body.map((e) => e.likes);
-  console.log(likes);
   assert.strictEqual(likes.length, 2);
+});
+
+const badBlogPost = {
+  author: "Eggman",
+  likes: 2,
+};
+
+test("Posting bad data to database", async () => {
+  await api.post("/api/blogs").send(badBlogPost).expect(400);
 });
 
 after(async () => {
