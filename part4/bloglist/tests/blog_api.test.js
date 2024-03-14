@@ -19,7 +19,6 @@ const initialBlogs = [
     title: "Bananas On Friday?",
     author: "The Coconut Female",
     url: "google.com",
-    likes: 3,
   },
 ];
 
@@ -67,6 +66,14 @@ test("Posting blog to Database", async () => {
 
   assert.strictEqual(response.body.length, initialBlogs.length + 1);
   assert(contents.includes("Sombreos on Sunday?"));
+});
+
+test("Check if likes defaulted", async () => {
+  const response = await api.get("/api/blogs");
+
+  const likes = response.body.map((e) => e.likes);
+  console.log(likes);
+  assert.strictEqual(likes.length, 2);
 });
 
 after(async () => {
