@@ -109,6 +109,30 @@ describe("Deleting blogs from database", () => {
     };
 });
 
+describe("Updating Database", () => {
+  test("update one blog from the database", async () => {
+    const blogs = await api.get("/api/blogs");
+
+    const blogToEdit = blogs.body[0].id;
+
+    await api.put(`/api/blogs/${blogToEdit}`).send({ likes: 35 });
+
+    const blogs2 = await api.get("/api/blogs");
+
+    console.log(blogs2.body);
+    assert.strictEqual(blogs2.body[0].likes, 35);
+  });
+
+  test("update with bad id", async () => {
+    const blogToEdit = 2;
+
+    await api
+      .put(`/api/blogs/${blogToEdit}`)
+      .send({ author: "egg" })
+      .expect(404);
+  });
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
