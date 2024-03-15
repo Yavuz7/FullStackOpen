@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require("node:test");
+const { test, after, beforeEach, describe } = require("node:test");
 const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
@@ -29,24 +29,26 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test("Get blogs", async () => {
-  const response = await api.get("/api/blogs");
+describe("Checking Blogs for the right info", () => {
+  test("Get blogs", async () => {
+    const response = await api.get("/api/blogs");
 
-  assert.strictEqual(response.body.length, initialBlogs.length);
-});
+    assert.strictEqual(response.body.length, initialBlogs.length);
+  });
 
-test("Get blog Format", async () => {
-  const response = await api
-    .get("/api/blogs")
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
-});
+  test("Get blog Format", async () => {
+    const response = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  });
 
-test("Get id property", async () => {
-  const response = await api.get("/api/blogs");
+  test("Get id property", async () => {
+    const response = await api.get("/api/blogs");
 
-  assert(response.body[0].hasOwnProperty("id"));
-  assert(!response.body[0].hasOwnProperty("_id"));
+    assert(response.body[0].hasOwnProperty("id"));
+    assert(!response.body[0].hasOwnProperty("_id"));
+  });
 });
 
 const newBlogPost = {
@@ -68,20 +70,43 @@ test("Posting blog to Database", async () => {
   assert(contents.includes("Sombreos on Sunday?"));
 });
 
-test("Check if likes defaulted", async () => {
-  const response = await api.get("/api/blogs");
+describe("Checking If Bad Data is caught", () => {
+  test("Check if likes defaulted", async () => {
+    const response = await api.get("/api/blogs");
 
-  const likes = response.body.map((e) => e.likes);
-  assert.strictEqual(likes.length, 2);
+    const likes = response.body.map((e) => e.likes);
+    assert.strictEqual(likes.length, 2);
+  });
+
+  const badBlogPost = {
+    author: "Eggman",
+    likes: 2,
+  };
+
+  test("Posting bad data to database", async () => {
+    await api.post("/api/blogs").send(badBlogPost).expect(400);
+  });
 });
 
-const badBlogPost = {
-  author: "Eggman",
-  likes: 2,
-};
+describe("Deleting blogs from database", () => {
+  test("delete one blog from the database", async () => {
+    const blogs = await api.get("/api/blogs");
 
-test("Posting bad data to database", async () => {
-  await api.post("/api/blogs").send(badBlogPost).expect(400);
+    const blogToDelete = blogs.body[0].id;
+
+    await api.delete(`/api/blogs/${blogToDelete}`).expect(204);
+
+    const blogs2 = await api.get("/api/blogs");
+
+    assert.strictEqual(blogs2.body.length, 1);
+  });
+
+  test("Delete nonexistent blog"),
+    async () => {
+      const blogToDelete = "2";
+
+      await api.delete(`/api/blogs/${blogToDelete}`).expect(400);
+    };
 });
 
 after(async () => {
