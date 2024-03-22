@@ -9,13 +9,19 @@ const app = require("../app");
 const api = supertest(app);
 
 const User = require("../models/user");
+const Blog = require("../models/blog");
 const helper = require("../utils/test_helper");
 
 beforeEach(async () => {
   await User.deleteMany({});
 
   const passwordHash = await bcrypt.hash("sekret", 10);
-  const user = new User({ username: "root", passwordHash });
+  const user = new User({
+    username: "root",
+    passwordHash,
+    _id: "65fdb18ede63adb903f49570",
+    blogs: ["65fdb18ede63adb903f49573", "65fdb18ede63adb903f49574"],
+  });
 
   await user.save();
 });
@@ -41,6 +47,18 @@ describe("when there is initially one user in db", () => {
 
     const usernames = usersAtEnd.map((u) => u.username);
     assert(usernames.includes(newUser.username));
+
+    const response = await api.get("/api/users");
+    const contents = response.body.map((e) => e);
+    console.log(contents);
+    assert.strictEqual(response.body.length, 2);
+  });
+
+  test("Get Users", async () => {
+    const response = await api.get("/api/users");
+    const contents = response.body.map((e) => e);
+    console.log(contents);
+    assert.strictEqual(response.body.length, 1);
   });
 
   test("Bad Username", async () => {
