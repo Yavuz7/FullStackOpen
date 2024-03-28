@@ -1,4 +1,5 @@
 const blogRouter = require("express").Router();
+const blog = require("../models/blog");
 const Blog = require("../models/blog");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
@@ -8,20 +9,12 @@ blogRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-const getTokenFrom = (request) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.replace("Bearer ", "");
-  }
-  return null;
-};
-
 blogRouter.post("/", async (request, response) => {
   const { title, author, url, likes } = request.body;
   let decodedToken;
-
+  console.log("here", request.token);
   try {
-    decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
   } catch {
     return response.status(401).json({ error: "token invalid" });
   }
@@ -41,18 +34,35 @@ blogRouter.post("/", async (request, response) => {
     const result = await blog.save();
     user.blogs = user.blogs.concat(result._id);
     await user.save();
-    response.status(201).json(result);
+    return response.status(201).json(result);
   } catch (error) {
-    response.status(400).json(error);
+    return response.status(400).json(error);
   }
 });
 
 blogRouter.delete("/:id", async (request, response) => {
+  let decodedToken;
   try {
-    const result = await blog.findByIdAndDelete(request.params.id);
-    response.status(204).json(result);
-  } catch (error) {
-    response.status(400).json(error);
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
+  } catch {
+    return response.status(401).json({ error: "token invalid" });
+  }
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+  const blog = await blog.findById(request.params.id);
+
+  if (blog.user.toString() === decodedToken.id.toString()) {
+    try {
+      const result = await blog.findByIdAndDelete(request.params.id);
+      response.status(204).json(result);
+    } catch (error) {
+      response.status(400).json(error);
+    }
+  } else {
+    return response
+      .status(401)
+      .json({ error: "Blog can only be deleted by creator" });
   }
 });
 

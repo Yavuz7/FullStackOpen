@@ -2,6 +2,7 @@ const config = require("./utils/config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const middleware = require("./utils/middleware.js");
 
 const loginRouter = require("./controllers/login");
 const blogRouter = require("./controllers/blogs");
@@ -22,6 +23,7 @@ mongoose
     logger.error("error connecting to MongoDB:", error.message);
   });
 
+app.use(middleware.tokenExtractor);
 app.use(cors());
 app.use(express.json());
 
