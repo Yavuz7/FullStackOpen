@@ -13,13 +13,11 @@ const initialBlogs = [
     title: "Tacos On Thursday?",
     author: "The Banana Man",
     url: "google.com",
-    user: "65fd8ebd82548577e60f7fc5",
     likes: 21,
   },
   {
     title: "Bananas On Friday?",
     author: "The Coconut Female",
-    user: "65fd8ebd82548577e60f7fc5",
     url: "google.com",
   },
 ];

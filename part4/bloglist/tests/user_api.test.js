@@ -20,7 +20,6 @@ beforeEach(async () => {
     username: "root",
     passwordHash,
     _id: "65fdb18ede63adb903f49570",
-    blogs: ["65fdb18ede63adb903f49573", "65fdb18ede63adb903f49574"],
   });
 
   await user.save();
@@ -34,6 +33,7 @@ describe("when there is initially one user in db", () => {
       username: "mluukkai",
       name: "Matti Luukkainen",
       password: "salainen",
+      id: "65fd8ebd82548577e60f7fc5",
     };
 
     await api
