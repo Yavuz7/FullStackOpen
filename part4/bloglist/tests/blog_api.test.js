@@ -13,11 +13,13 @@ const initialBlogs = [
     title: "Tacos On Thursday?",
     author: "The Banana Man",
     url: "google.com",
+    user: "65fdb18ede63adb903f49570",
     likes: 21,
   },
   {
     title: "Bananas On Friday?",
     author: "The Coconut Female",
+    user: "65fdb18ede63adb903f49570",
     url: "google.com",
   },
 ];
@@ -39,12 +41,21 @@ describe("Checking Blogs for the right info", () => {
   test("Get blog Format", async () => {
     const response = await api
       .get("/api/blogs")
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      )
       .expect(200)
       .expect("Content-Type", /application\/json/);
   });
 
   test("Get id property", async () => {
-    const response = await api.get("/api/blogs");
+    const response = await api
+      .get("/api/blogs")
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      );
 
     assert(response.body[0].hasOwnProperty("id"));
     assert(!response.body[0].hasOwnProperty("_id"));
@@ -57,11 +68,32 @@ const newBlogPost = {
   url: "google.com",
   likes: 40,
 };
+test("Sending out a bad token", async () => {
+  await api
+    .post("/api/blogs")
+    .set(
+      "Authorization",
+      "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+    )
+    .send(newBlogPost)
+    .expect(401);
+});
 
 test("Posting blog to Database", async () => {
-  await api.post("/api/blogs").send(newBlogPost);
+  await api
+    .post("/api/blogs")
+    .set(
+      "Authorization",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+    )
+    .send(newBlogPost);
 
-  const response = await api.get("/api/blogs");
+  const response = await api
+    .get("/api/blogs")
+    .set(
+      "Authorization",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+    );
 
   const contents = response.body.map((e) => e.title);
   console.log(contents);
@@ -72,7 +104,12 @@ test("Posting blog to Database", async () => {
 
 describe("Checking If Bad Data is caught", () => {
   test("Check if likes defaulted", async () => {
-    const response = await api.get("/api/blogs");
+    const response = await api
+      .get("/api/blogs")
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      );
 
     const likes = response.body.map((e) => e.likes);
     assert.strictEqual(likes.length, 2);
@@ -84,17 +121,35 @@ describe("Checking If Bad Data is caught", () => {
   };
 
   test("Posting bad data to database", async () => {
-    await api.post("/api/blogs").send(badBlogPost).expect(400);
+    await api
+      .post("/api/blogs")
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      )
+      .send(badBlogPost)
+      .expect(400);
   });
 });
 
 describe("Deleting blogs from database", () => {
   test("delete one blog from the database", async () => {
-    const blogs = await api.get("/api/blogs");
+    const blogs = await api
+      .get("/api/blogs")
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      );
 
-    const blogToDelete = blogs.body[0].id;
+    const blogToDelete = blogs.body[1].id;
 
-    await api.delete(`/api/blogs/${blogToDelete}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogToDelete}`)
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      )
+      .expect(204);
 
     const blogs2 = await api.get("/api/blogs");
 
@@ -105,7 +160,13 @@ describe("Deleting blogs from database", () => {
     async () => {
       const blogToDelete = "2";
 
-      await api.delete(`/api/blogs/${blogToDelete}`).expect(400);
+      await api
+        .delete(`/api/blogs/${blogToDelete}`)
+        .set(
+          "Authorization",
+          "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+        )
+        .expect(400);
     };
 });
 
@@ -128,6 +189,10 @@ describe("Updating Database", () => {
 
     await api
       .put(`/api/blogs/${blogToEdit}`)
+      .set(
+        "Authorization",
+        "Bearer hyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbmFuYSIsImlkIjoiNjYwNmQzNWRiMDFjNTNlMDBkNDIxYjJlIiwiaWF0IjoxNzExNzIzMzU3fQ.H9wj7SChl0emJNomlqsJZq5X6NIjdP_2DV-QAbCs7kM"
+      )
       .send({ author: "egg" })
       .expect(404);
   });
