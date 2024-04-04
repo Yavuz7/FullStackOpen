@@ -1,39 +1,20 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
-const BlogForm = ({
-  setBlogs,
-  setErrorMessage,
-  blogs,
-  setBlogCreationVisibile,
-}) => {
+const BlogForm = ({ setErrorMessage, createBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
   const addBlog = async (event) => {
     event.preventDefault();
-    try {
-      const blog = await blogService.create({
-        title,
-        author,
-        url,
-      });
-      setTitle("");
-      setAuthor("");
-      setUrl("");
-      setBlogs(blogs.concat([blog]));
-      setBlogCreationVisibile(false);
-      setErrorMessage(`Blog ${blog.title} by ${blog.author} added!`);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    } catch (exception) {
-      setErrorMessage("Blog Couldn't Be Created");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
+    createBlog({ title: title, author: author, url: url });
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+    setErrorMessage(`Blog ${title} by ${author} added!`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   };
 
   return (

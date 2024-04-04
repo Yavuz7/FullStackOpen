@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/loginForm";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
-  const [blogCreationVisibile, setBlogCreationVisibile] = useState(false);
 
+  const blogFormRef = useRef();
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
@@ -34,8 +35,12 @@ const App = () => {
     }, 5000);
   };
 
-  const hideWhenVisible = { display: blogCreationVisibile ? "none" : "" };
-  const showWhenVisible = { display: blogCreationVisibile ? "" : "none" };
+  const addBlog = (blogObject) => {
+    blogService.create(blogObject).then((returnedBlog) => {
+      setBlogs(blogs.concat([returnedBlog]));
+    });
+    blogFormRef.current.toggleVisibility();
+  };
 
   return (
     <>
@@ -48,23 +53,14 @@ const App = () => {
           <p>
             {user.name} logged-in <button onClick={logout}>Log Out</button>
           </p>
-          <div style={hideWhenVisible}>
-            <button onClick={() => setBlogCreationVisibile(true)}>
-              Create a new Blog!
-            </button>
-          </div>
-          <div style={showWhenVisible}>
+          <Togglable buttonLabel="Create A Blog" ref={blogFormRef}>
             <BlogForm
               setErrorMessage={setErrorMessage}
               setBlogs={setBlogs}
               blogs={blogs}
-              setBlogCreationVisibile={setBlogCreationVisibile}
+              createBlog={addBlog}
             />
-            <button onClick={() => setBlogCreationVisibile(false)}>
-              Cancel
-            </button>
-          </div>
-
+          </Togglable>
           <div>
             <h2>blogs</h2>
             {blogs.map((blog) => (
