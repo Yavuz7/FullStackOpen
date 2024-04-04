@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/loginForm";
+import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
 
 const App = () => {
@@ -21,15 +22,6 @@ const App = () => {
     }
   }, []);
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <input value={newBlog} onChange={handleBlogChange} />
-      <button type="submit">save</button>
-    </form>
-  );
-
-  const addBlog = (e) => {};
-
   const errorDisplay = () => <p>{errorMessage}</p>;
 
   const logout = () => {
@@ -47,7 +39,11 @@ const App = () => {
           <p>
             {user.name} logged-in <button onClick={logout}>Log Out</button>
           </p>
-          blogForm()
+          <BlogForm
+            setErrorMessage={setErrorMessage}
+            setBlogs={setBlogs}
+            blogs={blogs}
+          />
           <div>
             <h2>blogs</h2>
             {blogs.map((blog) => (
