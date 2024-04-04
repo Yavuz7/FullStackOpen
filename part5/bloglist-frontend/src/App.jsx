@@ -33,14 +33,14 @@ const App = () => {
         <div>
           <p>{user.name} logged-in</p>
           blogForm()
+          <div>
+            <h2>blogs</h2>
+            {blogs.map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+          </div>
         </div>
       )}
-      <div>
-        <h2>blogs</h2>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </div>
     </>
   );
 };
