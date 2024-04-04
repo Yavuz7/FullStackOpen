@@ -12,6 +12,15 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
+
   const blogForm = () => (
     <form onSubmit={addBlog}>
       <input value={newBlog} onChange={handleBlogChange} />
@@ -23,6 +32,10 @@ const App = () => {
 
   const errorDisplay = () => <p>{errorMessage}</p>;
 
+  const logout = () => {
+    setUser(null);
+    window.localStorage.removeItem("loggedBlogappUser");
+  };
   return (
     <>
       <h1>Login Here!</h1>
@@ -31,7 +44,9 @@ const App = () => {
         <LoginForm setErrorMessage={setErrorMessage} setUser={setUser} />
       ) : (
         <div>
-          <p>{user.name} logged-in</p>
+          <p>
+            {user.name} logged-in <button onClick={logout}>Log Out</button>
+          </p>
           blogForm()
           <div>
             <h2>blogs</h2>
