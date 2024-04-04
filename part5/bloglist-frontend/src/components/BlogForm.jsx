@@ -1,7 +1,12 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setBlogs, setErrorMessage, blogs }) => {
+const BlogForm = ({
+  setBlogs,
+  setErrorMessage,
+  blogs,
+  setBlogCreationVisibile,
+}) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -18,6 +23,7 @@ const BlogForm = ({ setBlogs, setErrorMessage, blogs }) => {
       setAuthor("");
       setUrl("");
       setBlogs(blogs.concat([blog]));
+      setBlogCreationVisibile(false);
       setErrorMessage(`Blog ${blog.title} by ${blog.author} added!`);
       setTimeout(() => {
         setErrorMessage(null);
