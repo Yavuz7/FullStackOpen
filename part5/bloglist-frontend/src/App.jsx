@@ -27,6 +27,10 @@ const App = () => {
   const logout = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogappUser");
+    setErrorMessage(`You Have Been Logged Out!`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   };
   return (
     <>

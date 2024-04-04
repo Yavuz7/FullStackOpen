@@ -18,6 +18,10 @@ const BlogForm = ({ setBlogs, setErrorMessage, blogs }) => {
       setAuthor("");
       setUrl("");
       setBlogs(blogs.concat([blog]));
+      setErrorMessage(`Blog ${blog.title} by ${blog.author} added!`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     } catch (exception) {
       setErrorMessage("Blog Couldn't Be Created");
       setTimeout(() => {

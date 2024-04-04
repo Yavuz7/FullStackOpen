@@ -18,6 +18,10 @@ const LoginForm = ({ setErrorMessage, setUser }) => {
       setUser(user);
       setUsername("");
       setPassword("");
+      setErrorMessage(`Login Successful, Welcome ${user.name}`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     } catch (exception) {
       setErrorMessage("Wrong credentials");
       setTimeout(() => {
