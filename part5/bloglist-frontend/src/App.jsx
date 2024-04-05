@@ -12,7 +12,7 @@ const App = () => {
 
   const blogFormRef = useRef();
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => setBlogs(blogs.sort(compareLikes)));
   }, []);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const App = () => {
   };
 
   const addLike = (blogObject) => {
-    blogService.sendLike(blogObject).then((returnedBlog) => {
+    blogService.sendLike(blogObject).then(() => {
       const newBlogsList = blogs.map((blog) => {
         if (blog.id === blogObject.id) {
           return blogObject;
@@ -51,8 +51,18 @@ const App = () => {
           return blog;
         }
       });
-      setBlogs(newBlogsList);
+      setBlogs(newBlogsList.sort(compareLikes));
     });
+  };
+
+  const compareLikes = (blogA, blogB) => {
+    if (blogA.likes < blogB.likes) {
+      return 1;
+    } else if (blogA.likes > blogB.likes) {
+      return -1;
+    } else {
+      return 0;
+    }
   };
   return (
     <>
