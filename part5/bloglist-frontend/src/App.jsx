@@ -64,6 +64,20 @@ const App = () => {
       return 0;
     }
   };
+
+  const removeBlog = (blogId, blogTitle) => {
+    if (window.confirm(`Are you sure you want to delete ${blogTitle}?`))
+      blogService.deleteBlog(blogId).then(() => {
+        const newBlogsList = blogs.filter((blog) => {
+          return blog.id !== blogId;
+        });
+        setBlogs(newBlogsList.sort(compareLikes));
+      });
+    setErrorMessage(`Blog ${blogTitle} has been deleted!`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
   return (
     <>
       <h1>Login Here!</h1>
@@ -91,6 +105,8 @@ const App = () => {
                 blog={blog}
                 setErrorMessage={setErrorMessage}
                 addLike={addLike}
+                removeBlog={removeBlog}
+                user={user}
               />
             ))}
           </div>

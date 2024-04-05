@@ -18,7 +18,7 @@ const sendLike = async (newObject) => {
       Authorization: token,
     },
   };
-  let url = baseUrl + "/" + newObject.id;
+  const url = baseUrl + "/" + newObject.id;
   const response = await axios.put(url, newObject, config);
   return response.data;
 };
@@ -34,4 +34,15 @@ const create = async (newObject) => {
   return response.data;
 };
 
-export default { getAll, create, setToken, sendLike };
+const deleteBlog = async (id) => {
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  const url = baseUrl + "/" + id;
+  const response = await axios.delete(url, config);
+  return response.data;
+};
+
+export default { getAll, create, setToken, sendLike, deleteBlog };

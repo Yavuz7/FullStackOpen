@@ -1,7 +1,6 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
-const Blog = ({ blog, setErrorMessage, addLike }) => {
+const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -29,6 +28,11 @@ const Blog = ({ blog, setErrorMessage, addLike }) => {
     }, 5000);
   };
 
+  const deletePost = (event) => {
+    event.preventDefault();
+    removeBlog(blog.id, blog.title);
+  };
+
   const details = (
     <div>
       {blog.url}
@@ -37,6 +41,15 @@ const Blog = ({ blog, setErrorMessage, addLike }) => {
         <button onClick={likePost}>Like this post!</button>
       </div>{" "}
       {blog.author}
+      {blog.user ? (
+        blog.user.username == user.username ? (
+          <button onClick={deletePost}>Delete Post</button>
+        ) : (
+          ""
+        )
+      ) : (
+        ""
+      )}
     </div>
   );
   return (
