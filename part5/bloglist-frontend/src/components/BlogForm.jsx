@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const BlogForm = ({ setErrorMessage, createBlog }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const addBlog = async (event) => {
-    event.preventDefault();
-    createBlog({ title: title, author: author, url: url });
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-    setErrorMessage(`Blog ${title} by ${author} added!`);
+    event.preventDefault()
+    createBlog({ title: title, author: author, url: url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setErrorMessage(`Blog ${title} by ${author} added!`)
     setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
-  };
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   return (
     <form onSubmit={addBlog}>
@@ -49,7 +49,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
       </div>
       <button type="submit">Create Blog!</button>
     </form>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm
