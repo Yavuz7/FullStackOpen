@@ -42,6 +42,18 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
   };
 
+  const addLike = (blogObject) => {
+    blogService.sendLike(blogObject).then((returnedBlog) => {
+      const newBlogsList = blogs.map((blog) => {
+        if (blog.id === blogObject.id) {
+          return blogObject;
+        } else {
+          return blog;
+        }
+      });
+      setBlogs(newBlogsList);
+    });
+  };
   return (
     <>
       <h1>Login Here!</h1>
@@ -64,7 +76,12 @@ const App = () => {
           <div>
             <h2>blogs</h2>
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                setErrorMessage={setErrorMessage}
+                addLike={addLike}
+              />
             ))}
           </div>
         </div>

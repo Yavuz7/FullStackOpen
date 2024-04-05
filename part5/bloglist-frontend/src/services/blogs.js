@@ -12,6 +12,17 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
+const sendLike = async (newObject) => {
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  let url = baseUrl + "/" + newObject.id;
+  const response = await axios.put(url, newObject, config);
+  return response.data;
+};
+
 const create = async (newObject) => {
   const config = {
     headers: {
@@ -23,4 +34,4 @@ const create = async (newObject) => {
   return response.data;
 };
 
-export default { getAll, create, setToken };
+export default { getAll, create, setToken, sendLike };

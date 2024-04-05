@@ -51,11 +51,20 @@ blogRouter.delete(
   }
 );
 
-blogRouter.put("/:id", async (request, response) => {
-  const newInfo = request.body;
+blogRouter.put("/:id", middleware.userExtractor, async (request, response) => {
+  const { title, author, url, likes } = request.body;
+  const user = request.user;
+
+  const updatedInfo = {
+    user: user._id,
+    likes: likes,
+    author: author,
+    title: title,
+    url: url,
+  };
 
   try {
-    const result = await blog.findByIdAndUpdate(request.params.id, newInfo);
+    const result = await blog.findByIdAndUpdate(request.params.id, updatedInfo);
     response.json(result);
   } catch (error) {
     response.status(404).json(error);
