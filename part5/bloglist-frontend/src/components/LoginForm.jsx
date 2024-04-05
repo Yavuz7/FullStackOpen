@@ -1,10 +1,16 @@
 import { useState } from "react";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const LoginForm = ({ setErrorMessage, setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  Togglable.propTypes = {
+    setErrorMessage: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired,
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
