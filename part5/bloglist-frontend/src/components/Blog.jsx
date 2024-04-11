@@ -55,7 +55,7 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
     <div style={blogStyle} className='Blog'>
       {blog.title}
       {blog.author}
-      <button onClick={() => setVisible(!visible)}>
+      <button onClick={() => setVisible(!visible)} className='toggleButton'>
         {!visible ? <div>View</div> : <div>close</div>}
       </button>
       {visible && details}{' '}
