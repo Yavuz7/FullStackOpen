@@ -38,7 +38,7 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
       {blog.url}
       <div>
         {blog.likes}
-        <button onClick={likePost}>Like this post!</button>
+        <button onClick={likePost} className='likeButton'>Like this post!</button>
       </div>{' '}
       {blog.user ? (
         blog.user.username === user.username ? (
