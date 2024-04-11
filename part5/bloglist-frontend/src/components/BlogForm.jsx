@@ -18,7 +18,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={addBlog} className='formDiv'>
       <h2>Make a New Blog</h2>
       <div>
         Title:
@@ -27,6 +27,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
           value={title}
           name="title"
           onChange={({ target }) => setTitle(target.value)}
+          id='title-input'
         />
       </div>
       <div>
@@ -36,6 +37,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
           value={author}
           name="author"
           onChange={({ target }) => setAuthor(target.value)}
+          id='author-input'
         />
       </div>
       <div>
@@ -45,6 +47,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
           value={url}
           name="url"
           onChange={({ target }) => setUrl(target.value)}
+          id='url-input'
         />
       </div>
       <button type="submit">Create Blog!</button>
