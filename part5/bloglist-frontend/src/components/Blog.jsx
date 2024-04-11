@@ -40,7 +40,6 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
         {blog.likes}
         <button onClick={likePost}>Like this post!</button>
       </div>{' '}
-      {blog.author}
       {blog.user ? (
         blog.user.username === user.username ? (
           <button onClick={deletePost}>Delete Post</button>
@@ -53,8 +52,9 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
     </div>
   )
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='Blog'>
       {blog.title}
+      {blog.author}
       <button onClick={() => setVisible(!visible)}>
         {!visible ? <div>View</div> : <div>close</div>}
       </button>
