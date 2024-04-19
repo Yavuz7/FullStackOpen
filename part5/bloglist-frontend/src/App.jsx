@@ -10,10 +10,6 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
 
-  const blogFormRef = useRef()
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.sort(compareLikes)))
-  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -23,6 +19,12 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogFormRef = useRef()
+  useEffect(() => {
+    blogService.getAll().then((blogs) => setBlogs(blogs.sort(compareLikes)))
+  }, [])
+
 
   const errorDisplay = () => <p>{errorMessage}</p>
 
@@ -37,6 +39,7 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogService.create(blogObject).then((returnedBlog) => {
+      returnedBlog.user = user
       setBlogs(blogs.concat([returnedBlog]))
     })
     blogFormRef.current.toggleVisibility()

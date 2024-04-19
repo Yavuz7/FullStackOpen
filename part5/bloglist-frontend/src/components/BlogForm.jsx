@@ -23,6 +23,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
       <div>
         Title:
         <input
+          data-testid='title'
           type="text"
           value={title}
           name="title"
@@ -33,6 +34,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
       <div>
         Author:
         <input
+          data-testid='author'
           type="text"
           value={author}
           name="author"
@@ -43,6 +45,7 @@ const BlogForm = ({ setErrorMessage, createBlog }) => {
       <div>
         URL:
         <input
+          data-testid='url'
           type="text"
           value={url}
           name="url"

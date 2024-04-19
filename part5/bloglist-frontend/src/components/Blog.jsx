@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
   const [visible, setVisible] = useState(false)
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -40,15 +39,13 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
         {blog.likes}
         <button onClick={likePost} className='likeButton'>Like this post!</button>
       </div>{' '}
-      {blog.user ? (
+      {
         blog.user.username === user.username ? (
           <button onClick={deletePost}>Delete Post</button>
         ) : (
           ''
         )
-      ) : (
-        ''
-      )}
+      }
     </div>
   )
   return (
