@@ -40,7 +40,7 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
         <button onClick={likePost} className='likeButton'>Like this post!</button>
       </div>{' '}
       {
-        blog.user.username === user.username ? (
+        (blog.user && user && blog.user.username === user.username) ? (
           <button onClick={deletePost}>Delete Post</button>
         ) : (
           ''

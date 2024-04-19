@@ -100,7 +100,7 @@ const App = () => {
               createBlog={addBlog}
             />
           </Togglable>
-          <div>
+          <div data-testid='blogsToShow'>
             <h2>blogs</h2>
             {blogs.map((blog) => (
               <Blog
