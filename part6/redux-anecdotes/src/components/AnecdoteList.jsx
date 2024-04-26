@@ -3,7 +3,7 @@ import { addVote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(({ anecdotes, aFilter }) => {
-    const filter = aFilter.filter.toLowerCase();
+    const filter = aFilter.toLowerCase();
     if (filter.length > 0) {
       const filteredAnecdotes = anecdotes.filter((q) => {
         return q.content.toLowerCase().includes(filter);

@@ -10,9 +10,7 @@ const filterReducer = (state = "", action) => {
 export const setFilter = (keywords) => {
   return {
     type: "SET_FILTER",
-    payload: {
-      filter: keywords,
-    },
+    payload: keywords,
   };
 };
 
