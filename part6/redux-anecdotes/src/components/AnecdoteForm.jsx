@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { newQuote } from "../reducers/anecdoteReducer";
+import { setNotif, clearNotif } from "../reducers/notificationsReducer";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -9,6 +10,8 @@ const AnecdoteForm = () => {
     const content = event.target.quote.value;
     event.target.quote.value = "";
     dispatch(newQuote(content));
+    dispatch(setNotif(`New Quote: ${content} Added!`));
+    dispatch(clearNotif());
   };
 
   return (
