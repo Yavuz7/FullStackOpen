@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import anecdoteReducer from "./reducers/anecdoteReducer";
+import anecdoteService from "./services/anecdoteService";
+import anecdoteReducer, { setQuotes } from "./reducers/anecdoteReducer";
 import filterReducer from "./reducers/filterReducer";
 import notificationReducer from "./reducers/notificationsReducer";
 
@@ -10,4 +11,8 @@ export const store = configureStore({
     filter: filterReducer,
     notifications: notificationReducer,
   },
+});
+
+anecdoteService.getAll().then((quotes) => {
+  store.dispatch(setQuotes(quotes));
 });
