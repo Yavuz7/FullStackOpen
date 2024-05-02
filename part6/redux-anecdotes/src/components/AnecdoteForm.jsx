@@ -2,8 +2,6 @@ import { useDispatch } from "react-redux";
 import { newQuote } from "../reducers/anecdoteReducer";
 import { setNotif, clearNotif } from "../reducers/notificationsReducer";
 
-import anecdoteService from "../services/anecdoteService";
-
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
@@ -11,9 +9,8 @@ const AnecdoteForm = () => {
     event.preventDefault();
     const content = event.target.quote.value;
     event.target.quote.value = "";
-    const quote = await anecdoteService.createNew(content);
-    dispatch(newQuote(quote));
-    dispatch(setNotif(`New Quote: "${quote.content}" Added!`));
+    dispatch(newQuote(content));
+    dispatch(setNotif(`New Quote: "${content}" Added!`));
     setTimeout(() => dispatch(clearNotif()), 5000);
   };
 
