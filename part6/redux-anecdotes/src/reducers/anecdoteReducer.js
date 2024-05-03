@@ -6,13 +6,10 @@ const anecdoteSlice = createSlice({
   initialState: [],
   reducers: {
     addVote(state, action) {
-      const id = action.payload;
-      const quoteToAddVoteTo = state.find((q) => q.id === id);
-      const changedQuote = {
-        ...quoteToAddVoteTo,
-        votes: quoteToAddVoteTo.votes + 1,
-      };
-      return state.map((quote) => (quote.id !== id ? quote : changedQuote));
+      const changedQuote = action.payload;
+      return state.map((quote) =>
+        quote.id !== changedQuote.id ? quote : changedQuote
+      );
     },
     appendQuote(state, action) {
       state.push(action.payload);
@@ -38,4 +35,12 @@ export const newQuote = (content) => {
     dispatch(appendQuote(quote));
   };
 };
+
+export const increaseVote = (content) => {
+  return async (dispatch) => {
+    const quote = await anecdoteService.incrementVote(content);
+    dispatch(addVote(quote));
+  };
+};
+
 export default anecdoteSlice.reducer;
