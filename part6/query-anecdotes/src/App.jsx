@@ -1,8 +1,11 @@
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
+import { useNotificationDispatch } from "./NotificationContext.jsx";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getAnecdotes, createAnecdote, updateAnecdote } from "../requests";
 const App = () => {
+  const dispatch = useNotificationDispatch();
+
   const updateVoteMutation = useMutation({
     mutationFn: updateAnecdote,
     onSuccess: () => {
@@ -12,6 +15,8 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     updateVoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
+    dispatch({ type: "VOTE", payload: anecdote.content });
+    setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
   };
 
   const result = useQuery({
@@ -26,6 +31,10 @@ const App = () => {
     mutationFn: createAnecdote,
     onSuccess: () => {
       queryClient.invalidateQueries("anecdotes");
+    },
+    OnError: () => {
+      dispatch({ type: "ERROR", payload: "Length Of Anecdote too short" });
+      setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
     },
   });
   console.log(JSON.parse(JSON.stringify(result)));
