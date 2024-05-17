@@ -32,9 +32,8 @@ const App = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("anecdotes");
     },
-    OnError: () => {
-      dispatch({ type: "ERROR", payload: "Length Of Anecdote too short" });
-      setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
+    onError: () => {
+      console.log("here");
     },
   });
   console.log(JSON.parse(JSON.stringify(result)));

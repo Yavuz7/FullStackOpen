@@ -7,9 +7,20 @@ const AnecdoteForm = ({ anecdoteMutation }) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    anecdoteMutation({ content, votes: 0 });
-    dispatch({ type: "CREATE", payload: content });
-    setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
+    anecdoteMutation(
+      { content, votes: 0 },
+      {
+        onError: () => {
+          dispatch({ type: "ERROR", payload: "Length Of Anecdote too short" });
+          setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
+        },
+        onSuccess: () => {
+          dispatch({ type: "CREATE", payload: content });
+          setTimeout(() => dispatch({ type: "CLEAR", payload: null }), 5000);
+        },
+      }
+    );
+
     console.log("new anecdote");
   };
 
