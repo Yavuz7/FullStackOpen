@@ -1,0 +1,63 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "Egggmasa",
+      "id": 3
+    },
+    {
+      "content": "hehehe",
+      "id": 4
+    },
+    {
+      "content": "ege",
+      "id": 5
+    },
+    {
+      "content": "egee",
+      "id": 6
+    },
+    {
+      "content": "The world is a world",
+      "id": 7
+    },
+    {
+      "content": "The world is a world",
+      "id": 8
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    },
+    {
+      "name": "Bananana",
+      "number": "12021212",
+      "id": 3
+    },
+    {
+      "name": "The banana man",
+      "number": "111-222-1111",
+      "id": 4
+    },
+    {
+      "name": "The banana man",
+      "number": "111-222-1111",
+      "id": 5
+    }
+  ]
+}
