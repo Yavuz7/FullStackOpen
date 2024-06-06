@@ -14,19 +14,16 @@ import {
 } from "./reducers/blogsReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { grabUser, clearUser } from "./reducers/userReducer";
 
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
+    dispatch(grabUser());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const blogFormRef = useRef();
@@ -36,7 +33,7 @@ const App = () => {
   }, []);
 
   const logout = () => {
-    setUser(null);
+    dispatch(clearUser());
     window.localStorage.removeItem("loggedBlogappUser");
     dispatch(displayNotif("You Have Been Logged Out!"));
   };
@@ -61,7 +58,7 @@ const App = () => {
       <h1>Login Here!</h1>
       <Notification />
       {user === null ? (
-        <LoginForm setUser={setUser} />
+        <LoginForm />
       ) : (
         <div>
           <p>

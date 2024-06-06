@@ -4,16 +4,12 @@ import blogService from "../services/blogs";
 import PropTypes from "prop-types";
 import { displayNotif } from "../reducers/notificationReducer";
 import { useDispatch } from "react-redux";
+import { setUser } from "../reducers/userReducer";
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  LoginForm.propTypes = {
-    setErrorMessage: PropTypes.func.isRequired,
-    setUser: PropTypes.func.isRequired,
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -24,7 +20,7 @@ const LoginForm = ({ setUser }) => {
       });
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(setUser(user));
       setUsername("");
       setPassword("");
       dispatch(displayNotif(`Login Successful, Welcome ${user.name}`));
