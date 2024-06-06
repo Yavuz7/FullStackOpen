@@ -4,10 +4,13 @@ import LoginForm from "./components/loginForm";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
 import Togglable from "./components/Togglable";
+import Notification from "./components/notification";
+import { displayNotif } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,15 +27,10 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs.sort(compareLikes)));
   }, []);
 
-  const errorDisplay = () => <p>{errorMessage}</p>;
-
   const logout = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogappUser");
-    setErrorMessage("You Have Been Logged Out!");
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
+    dispatch(displayNotif("You Have Been Logged Out!"));
   };
 
   const addBlog = (blogObject) => {
@@ -74,29 +72,21 @@ const App = () => {
         });
         setBlogs(newBlogsList.sort(compareLikes));
       });
-    setErrorMessage(`Blog ${blogTitle} has been deleted!`);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
+    dispatch(displayNotif(`Blog ${blogTitle} has been deleted!`));
   };
   return (
     <>
       <h1>Login Here!</h1>
-      {errorMessage !== null && errorDisplay()}
+      <Notification />
       {user === null ? (
-        <LoginForm setErrorMessage={setErrorMessage} setUser={setUser} />
+        <LoginForm setUser={setUser} />
       ) : (
         <div>
           <p>
             {user.name} logged-in <button onClick={logout}>Log Out</button>
           </p>
           <Togglable buttonLabel="Create A Blog" ref={blogFormRef}>
-            <BlogForm
-              setErrorMessage={setErrorMessage}
-              setBlogs={setBlogs}
-              blogs={blogs}
-              createBlog={addBlog}
-            />
+            <BlogForm setBlogs={setBlogs} blogs={blogs} createBlog={addBlog} />
           </Togglable>
           <div data-testid="blogsToShow">
             <h2>blogs</h2>
@@ -104,7 +94,6 @@ const App = () => {
               <Blog
                 key={blog.id}
                 blog={blog}
-                setErrorMessage={setErrorMessage}
                 addLike={addLike}
                 removeBlog={removeBlog}
                 user={user}

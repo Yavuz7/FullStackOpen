@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { displayNotif } from "../reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
-const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
+const Blog = ({ blog, addLike, user, removeBlog }) => {
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const blogStyle = {
     paddingTop: 10,
@@ -21,10 +24,7 @@ const Blog = ({ blog, setErrorMessage, addLike, user, removeBlog }) => {
       likes: newLikes,
       id: id,
     });
-    setErrorMessage(`Blog ${title} has been liked!`);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
+    dispatch(displayNotif(`Blog ${title} has been liked!`));
   };
 
   const deletePost = (event) => {
