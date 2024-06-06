@@ -6,11 +6,18 @@ import blogService from "./services/blogs";
 import Togglable from "./components/Togglable";
 import Notification from "./components/notification";
 import { displayNotif } from "./reducers/notificationReducer";
+import {
+  getAllBlogsSorted,
+  addNewBlog,
+  likeBlog,
+  removeBlog,
+} from "./reducers/blogsReducer";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const App = () => {
   const dispatch = useDispatch();
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,7 +31,8 @@ const App = () => {
 
   const blogFormRef = useRef();
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.sort(compareLikes)));
+    dispatch(getAllBlogsSorted());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = () => {
@@ -33,46 +41,20 @@ const App = () => {
     dispatch(displayNotif("You Have Been Logged Out!"));
   };
 
-  const addBlog = (blogObject) => {
-    blogService.create(blogObject).then((returnedBlog) => {
-      returnedBlog.user = user;
-      setBlogs(blogs.concat([returnedBlog]));
-    });
+  const addBlog = (blogObject, user) => {
+    dispatch(addNewBlog(blogObject, user));
     blogFormRef.current.toggleVisibility();
   };
 
   const addLike = (blogObject) => {
-    blogService.sendLike(blogObject).then(() => {
-      const newBlogsList = blogs.map((blog) => {
-        if (blog.id === blogObject.id) {
-          return blogObject;
-        } else {
-          return blog;
-        }
-      });
-      setBlogs(newBlogsList.sort(compareLikes));
-    });
+    dispatch(likeBlog(blogObject));
   };
 
-  const compareLikes = (blogA, blogB) => {
-    if (blogA.likes < blogB.likes) {
-      return 1;
-    } else if (blogA.likes > blogB.likes) {
-      return -1;
-    } else {
-      return 0;
+  const deleteBlog = (blogId, blogTitle) => {
+    if (window.confirm(`Are you sure you want to delete ${blogTitle}?`)) {
+      dispatch(removeBlog(blogId));
+      dispatch(displayNotif(`Blog ${blogTitle} has been deleted!`));
     }
-  };
-
-  const removeBlog = (blogId, blogTitle) => {
-    if (window.confirm(`Are you sure you want to delete ${blogTitle}?`))
-      blogService.deleteBlog(blogId).then(() => {
-        const newBlogsList = blogs.filter((blog) => {
-          return blog.id !== blogId;
-        });
-        setBlogs(newBlogsList.sort(compareLikes));
-      });
-    dispatch(displayNotif(`Blog ${blogTitle} has been deleted!`));
   };
   return (
     <>
@@ -86,7 +68,7 @@ const App = () => {
             {user.name} logged-in <button onClick={logout}>Log Out</button>
           </p>
           <Togglable buttonLabel="Create A Blog" ref={blogFormRef}>
-            <BlogForm setBlogs={setBlogs} blogs={blogs} createBlog={addBlog} />
+            <BlogForm blogs={blogs} createBlog={addBlog} />
           </Togglable>
           <div data-testid="blogsToShow">
             <h2>blogs</h2>
@@ -95,7 +77,7 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 addLike={addLike}
-                removeBlog={removeBlog}
+                removeBlog={deleteBlog}
                 user={user}
               />
             ))}
