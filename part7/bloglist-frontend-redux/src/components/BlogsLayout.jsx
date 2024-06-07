@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import BlogDetails from "./BlogDetails";
 
 import BlogForm from "./BlogForm";
 import Blog from "./Blog";
@@ -46,16 +48,23 @@ const BlogsLayout = ({ user }) => {
       <Togglable buttonLabel="Create A Blog" ref={blogFormRef}>
         <BlogForm blogs={blogs} createBlog={addBlog} />
       </Togglable>
+      <Routes>
+        <Route
+          path="/blogs/:id"
+          element={
+            <BlogDetails
+              blogs={blogs}
+              addLike={addLike}
+              removeBlog={deleteBlog}
+              user={user}
+            />
+          }
+        />
+      </Routes>
       <div data-testid="blogsToShow">
         <h2>blogs</h2>
         {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            addLike={addLike}
-            removeBlog={deleteBlog}
-            user={user}
-          />
+          <Blog key={blog.id} blog={blog} />
         ))}
       </div>
     </>
