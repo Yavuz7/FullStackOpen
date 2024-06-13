@@ -1,10 +1,16 @@
 const blogRouter = require("express").Router();
 const blog = require("../models/blog");
 const Blog = require("../models/blog");
+const Comment = require("../models/comment");
 const middleware = require("../utils/middleware");
 
 blogRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
+  const blogs = await Blog.find({}).populate(
+    "user",
+    { username: 1, name: 1 },
+    "comments",
+    { title: 1 }
+  );
   response.json(blogs);
 });
 
@@ -52,7 +58,7 @@ blogRouter.delete(
 );
 
 blogRouter.put("/:id", middleware.userExtractor, async (request, response) => {
-  const { title, author, url, likes } = request.body;
+  const { title, author, url, likes, comments } = request.body;
   const user = request.user;
 
   const updatedInfo = {
@@ -60,6 +66,7 @@ blogRouter.put("/:id", middleware.userExtractor, async (request, response) => {
     likes: likes,
     author: author,
     title: title,
+    comments: comments,
     url: url,
   };
 
@@ -68,6 +75,26 @@ blogRouter.put("/:id", middleware.userExtractor, async (request, response) => {
     response.json(result);
   } catch (error) {
     response.status(404).json(error);
+  }
+});
+
+blogRouter.post("/:id", async (request, response) => {
+  const { title } = request.body;
+  const blogId = request.params.id;
+
+  const newComment = new Comment({
+    title,
+    blog: blogId,
+  });
+  try {
+    const result = await newComment.save();
+    const blogToUpdate = await Blog.findById(blogId);
+    await Blog.findByIdAndUpdate(blogId, {
+      comments: blogToUpdate.comments.concat(result._id),
+    });
+    return response.status(201).json(result);
+  } catch (error) {
+    return response.status(400).json(error);
   }
 });
 
