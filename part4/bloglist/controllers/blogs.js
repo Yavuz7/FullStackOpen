@@ -5,12 +5,9 @@ const Comment = require("../models/comment");
 const middleware = require("../utils/middleware");
 
 blogRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({}).populate(
-    "user",
-    { username: 1, name: 1 },
-    "comments",
-    { title: 1 }
-  );
+  const blogs = await Blog.find({})
+    .populate("user", { username: 1, name: 1 })
+    .populate("comments", { title: 1 });
   response.json(blogs);
 });
 
@@ -88,6 +85,7 @@ blogRouter.post("/:id", async (request, response) => {
   });
   try {
     const result = await newComment.save();
+    console.log("HERE!");
     const blogToUpdate = await Blog.findById(blogId);
     await Blog.findByIdAndUpdate(blogId, {
       comments: blogToUpdate.comments.concat(result._id),

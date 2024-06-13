@@ -10,7 +10,7 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
     return null;
   }
   const likePost = async (event) => {
-    const { title, author, url, likes, id } = blog;
+    const { title, author, url, likes, id, comments } = blog;
     const newLikes = likes + 1;
     event.preventDefault();
     addLike({
@@ -19,6 +19,7 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
       url: url,
       likes: newLikes,
       id: id,
+      comments: comments,
     });
     dispatch(displayNotif(`Blog ${title} has been liked!`));
   };
@@ -49,6 +50,16 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
         ) : (
           ""
         )}
+        <ul>
+          <h3>Comments</h3>
+          {blog.comments.length > 0 ? (
+            blog.comments.map((comment) => (
+              <li key={comment.id}>{comment.title}</li>
+            ))
+          ) : (
+            <p>No Comments</p>
+          )}
+        </ul>
       </div>
     </div>
   );
