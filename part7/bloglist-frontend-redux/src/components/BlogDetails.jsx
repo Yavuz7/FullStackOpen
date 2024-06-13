@@ -1,8 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { displayNotif } from "../reducers/notificationReducer";
+import { addNewComment } from "../reducers/blogsReducer";
+import { useState } from "react";
 
 const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
+  const [commentInput, setCommentInput] = useState("");
   const dispatch = useDispatch();
   const currentId = useParams().id;
   let blog = blogs.find((blogSearch) => blogSearch.id === currentId);
@@ -11,6 +14,7 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
   }
   const likePost = async (event) => {
     const { title, author, url, likes, id, comments } = blog;
+    const commentIds = comments.map((comment) => comment.id);
     const newLikes = likes + 1;
     event.preventDefault();
     addLike({
@@ -19,11 +23,15 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
       url: url,
       likes: newLikes,
       id: id,
-      comments: comments,
+      comments: commentIds,
     });
     dispatch(displayNotif(`Blog ${title} has been liked!`));
   };
 
+  const addComment = (event) => {
+    event.preventDefault();
+    dispatch(addNewComment(blog.id, commentInput));
+  };
   const deletePost = (event) => {
     event.preventDefault();
     removeBlog(blog.id, blog.title);
@@ -50,11 +58,22 @@ const BlogDetails = ({ blogs, addLike, user, removeBlog }) => {
         ) : (
           ""
         )}
+        <h3>Comments</h3>
+        <form onSubmit={addComment}>
+          <div>Add a new comment!</div>
+          <input
+            data-testid="commentInput"
+            type="text"
+            value={commentInput}
+            name="commentInput"
+            onChange={({ target }) => setCommentInput(target.value)}
+          />
+          <button type="submit">Add Comment!</button>
+        </form>
         <ul>
-          <h3>Comments</h3>
           {blog.comments.length > 0 ? (
-            blog.comments.map((comment) => (
-              <li key={comment.id}>{comment.title}</li>
+            blog.comments.map((comment, index) => (
+              <li key={`${comment.id}-${index}`}>{comment.title}</li>
             ))
           ) : (
             <p>No Comments</p>

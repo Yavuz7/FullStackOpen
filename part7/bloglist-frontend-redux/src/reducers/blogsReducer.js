@@ -70,4 +70,11 @@ export const removeBlog = (blogId) => {
   };
 };
 
+export const addNewComment = (blogId, content) => {
+  return async (dispatch) => {
+    await blogService.createComment(blogId, content);
+    dispatch(getAllBlogsSorted());
+  };
+};
+
 export default blogsReducer.reducer;

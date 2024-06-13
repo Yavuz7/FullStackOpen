@@ -23,6 +23,12 @@ const sendLike = async (newObject) => {
   return response.data;
 };
 
+const createComment = async (blogId, content) => {
+  const url = baseUrl + "/" + blogId;
+  const response = await axios.post(url, { title: content });
+  return response.data;
+};
+
 const create = async (newObject) => {
   const config = {
     headers: {
@@ -45,4 +51,11 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
-export default { getAll, create, setToken, sendLike, deleteBlog };
+export default {
+  getAll,
+  create,
+  setToken,
+  sendLike,
+  deleteBlog,
+  createComment,
+};
